@@ -30,6 +30,7 @@ module.exports = {
     'space-before-blocks': 0,
     'spaced-comment':0,
     'key-spacing': 0,
-    'indent': 0
+    'indent': 0,
+    'no-dupe-keys': 0
   }
 }
