@@ -1,6 +1,6 @@
 <template>
     <div class="bar">
-      <div v-for="index in num" class="unit" ref="units" @click="goto(index-1)" :class="{inverse: inverseControl && centerIndex === index-1, centerFont: centerIndex === index-1}">
+      <div v-for="index in num" class="unit" ref="units" @click.stop.prevent="goto(index-1)" :class="{inverse: inverseControl && centerIndex === index-1, centerFont: centerIndex === index-1}">
         <span class="icon-spinner11"></span>
       </div>
     </div>
@@ -35,6 +35,12 @@
           this.inverseControl = !this.inverseControl;
         },
         /**
+         * 供父组件使用，复位IndexControl
+         * */
+        resetIndexControl: function () {
+          this.inverseControl = false;
+        },
+        /**
          * 供父组件使用，改变目前处于中心的图片相对应的小按钮的样式
          * @param centerIndex
          */
@@ -52,26 +58,26 @@
   .bar{
     /*position: absolute;*/
     background-color: rgba(0,0,0,0.5);
-    padding: 5px 30px 5px 30px;
-    border-radius: 20px;
+    padding: .5rem 1.5rem .5rem 1.5rem;
+    border-radius: 2rem;
     .unit{
+      perspective: 1800px;
       transition: transform @time ease-in-out;
       display: inline-block;
-      width: 2em;
-      height: 2em;
-      line-height: 2em;
+      width: 2.5rem;
+      height: 2.5rem;
+      line-height: 2.5rem;
       border-radius: 50%;
       background-color: rgba(255,255,255,0.5);
-      margin: 0 5px;
-      color: gray;
-      font-size: 0.9em;
+      margin: 0 .5rem;
+      color: darkgray;
+      font-size: 1.5rem;
       text-align: center;
       cursor: pointer;
       .icon-spinner11:before {
         content: "\e984";
       }
       &.inverse{
-        perspective: 1800px;
         transform: rotateY(180deg);
       }
       &.centerFont{

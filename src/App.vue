@@ -1,6 +1,6 @@
 <template>
   <div id="app" ref="stage">
-    <div class="bg"></div>
+    <div class="bg" :style="{backgroundImage: bg}"></div>
     <div v-for="(value,index) in imgData" ref="imgs" class="imgCom" :style="imgStyle[index]" @click.stop.prevent="changeCenter(index)">
       <figureMy :srcMy="value.imgName" :title="value.title" :desc="value.desc" class="com" ref="hhh"></figureMy>
     </div>
@@ -12,7 +12,8 @@ import figureMy from './components/figure/figure';
 import bar from './components/bar/bar';
 import './common/less/base.less';
 import dataOld from '../data.json';
-
+const bg = require('./common/img/bg.jpg')
+//import './common/less/bg.less';
 export default {
   name: 'app',
   data() {
@@ -20,6 +21,7 @@ export default {
       imgData: [],
       dataOld: dataOld,
       centerIndex: 0,
+      bg: 'url('+bg+')',
       // 中心图片的位置
       centerPos: {
         left: 0,
@@ -101,9 +103,10 @@ export default {
       if (this.centerIndex === index) {
         this.$refs.hhh[index].fanzhuan();
         this.$refs.bar.changeIndexControl();
-        return;
+        return false;
       }
       this.$refs.hhh[this.centerIndex].huifuCenter();
+      this.$refs.bar.resetIndexControl();
       this.centerIndex = index;
       this.$refs.bar.changeCenter(this.centerIndex);
     }
@@ -149,24 +152,23 @@ export default {
 <style lang="less" rel="stylesheet/less" scoped>
   @time: .8s;
 #app {
+  width: 100%;
+  height: 100%;
+  /*background-color: darkgrey;*/
+  overflow: hidden;
+  position: fixed;
+  top:0;
+  left:0;
   .bg{
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
     top:0;
-    background-image: url('./common/img/bg.jpg');
+    /*background-image: url('./common/img/bg.jpg');*/
     background-size: cover;
     filter: blur(10px);
   }
-  width: 100%;
-  height: 100%;
-  /*background-color: darkgrey;*/
-
-  overflow: hidden;
-  position: fixed;
-  top:0;
-  left:0;
   .imgCom{
     position: absolute;
     transition : left @time ease-in-out, top @time ease-in-out, transform @time ease-in-out;
@@ -177,7 +179,7 @@ export default {
     position: relative;
     display: table;
     margin: 0 auto;
-    top: 90%;
+    top: 91%;
   }
 }
 </style>

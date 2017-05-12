@@ -48,19 +48,20 @@
 <style lang="less" rel="stylesheet/less" scoped>
   @time: .8s;
 .figure{
-  padding: 30px 0;
-  width: 300px;
+  padding: 2rem 3rem;
+  /*width: 300px;*/
   background-color: #ffffff;
   margin: 0;
   transition : opacity @time ease-in-out, transform @time ease-in-out;
+  perspective: 1800px;
   .tupian{
     display: block;
     margin: 0 auto;
-    width: 240px;
-    height: 160px;
+    width: 24rem;
+    height: 16rem;
   }
   .desc{
-    font-size: 15px;
+    font-size: 1.5rem;
     color: gray;
     text-align: center;
   }
@@ -71,19 +72,19 @@
     left: 0;
     position: absolute;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 2rem;
     font-weight: 700;
     color: gray;
     opacity: 0;
     transition: opacity @time ease-in-out;
     background-color: #ffffff;
     transform: rotateY(180deg);
+    box-sizing: border-box;
     p{
-      padding-top: 70px;
+      padding: 7rem 3rem 3rem 3rem;
     }
   }
   &.isInverse{
-    perspective: 1800px;
     transform: rotateY(180deg);
     .back{
       opacity: 1;
