@@ -5,6 +5,13 @@
       <figureMy :srcMy="value.imgName" :title="value.title" :desc="value.desc" class="com" ref="hhh"></figureMy>
     </div>
     <bar :num="imgData.length" class="bar" @goto="changeCenter" ref="bar"></bar>
+    <div class="preload" v-show="show">
+      <div class="loading">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+      </div>
+      {{process}}
+    </div>
   </div>
 </template>
 <script>
@@ -22,6 +29,9 @@ export default {
       dataOld: dataOld,
       centerIndex: 0,
       bg: 'url('+bg+')',
+      process: '0%',
+      show: true,
+      imgPath: [],
       // 中心图片的位置
       centerPos: {
         left: 0,
@@ -47,7 +57,7 @@ export default {
   created: function () {
     this.$nextTick(function(){
       this._init();
-//      this.rearrange(this.centerIndex);
+      this.preload(this.imgPath);
     });
   },
   methods: {
@@ -62,8 +72,12 @@ export default {
       for (let i=0; i<this.dataOld.length; i++){
         let singleImgData = this.dataOld[i];
         singleImgData.imgName = require('./common/img/' + this.dataOld[i].imgName);
+        this.imgPath.push(singleImgData.imgName);
         data[i] = singleImgData;
       }
+
+      this.imgPath.push(bg);
+
       this.imgData = data;
       this.$nextTick(function () {
         const imgDOM = this.$refs.imgs;
@@ -84,6 +98,23 @@ export default {
         this.vPosRange.topY = [-halfImgW, halfStageH - 3 * halfImgH];
 //        console.log(this.vPosRange);
       });
+    },
+    preload: function(img) {
+      const imgs = typeof img === 'string' ? [img] : img;
+      const len = imgs.length;
+      let count = 0;
+      for (let i = 0; i < len; i++) {
+        let imgObj = new Image();
+        imgObj.onload = imgObj.onerror = function (){
+          count++;
+          if (count >= len - 1){
+            this.show = false;
+            return;
+          }
+          this.process = ((count/len)*100).toFixed(2) + '%';
+        }.bind(this);
+        imgObj.src = imgs[i];
+      }
     },
     /**
      * 获得指定范围内的随机证书
@@ -151,15 +182,17 @@ export default {
 
 <style lang="less" rel="stylesheet/less" scoped>
   @time: .8s;
+  @timeLoading: 2s;
+  @width: 5rem;
 #app {
   width: 100%;
   height: 100%;
-  /*background-color: darkgrey;*/
   overflow: hidden;
   position: fixed;
   top:0;
   left:0;
   .bg{
+    /*background-image: url('./common/img/bg.jpg');*/
     position: absolute;
     width: 100%;
     height: 100%;
@@ -181,5 +214,48 @@ export default {
     margin: 0 auto;
     top: 91%;
   }
+  .preload{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top:0;
+    text-align: center;
+    background-color: #eee;
+    z-index: 200;
+    font-size: 1.5rem;
+    padding-top: 25rem;
+    .loading{
+      width: @width;
+      height: @width;
+      position: relative;
+      margin: 0 auto;
+      .circle2,.circle1{
+        position: absolute;
+        width: @width;
+        height: @width;
+        background-color: darkblue;
+        border-radius: 50% 50%;
+        animation-timing-function: ease-in-out;
+      }
+      .circle1{
+        opacity: 0.7;
+        animation: loading1 @timeLoading infinite;
+      }
+      .circle2{
+        opacity: 0.9;
+        transform: scale(0);
+        animation: loading2 @timeLoading infinite;
+      }
+    }
+  }
 }
+  @keyframes loading1{
+    0%{  opacity: 0.7;  transform: scale(1);  }
+    50%{  opacity: 0.9;  transform: scale(0);  }
+  }
+  @keyframes loading2{
+    0%{  opacity: 0.9;  transform: scale(0);  }
+    50%{  opacity: 0.7;  transform: scale(1);  }
+  }
 </style>
