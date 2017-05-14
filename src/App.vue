@@ -107,7 +107,7 @@ export default {
         let imgObj = new Image();
         imgObj.onload = imgObj.onerror = function (){
           count++;
-          if (count >= len - 1){
+          if (count >= len){
             this.show = false;
             return;
           }
